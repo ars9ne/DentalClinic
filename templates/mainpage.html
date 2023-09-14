@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Stomatcenter Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mainpage.css')}}">
+</head>
+
+<body>
+    <div class="top-menu">
+        <div class="top-menu-slot-l">
+            <ul class="top-menu">
+            <li><a href="#">Запишитесь онлайн</a></li>
+            <li><i class="fa fa-phone fa-lg fa-rotate"></i><p><b> +7 (777) 777-77-77</b></p></li>
+            </ul>
+        </div>
+    </div>
+
+    </ul>
+
+    <div class="container">
+        <ul>
+            <li><img src="{{ url_for('static', filename='stomatcenter.png') }}" alt="Stomatcenter Logo"></li>
+            <li><a href="/add_patient">Добавить пациента</a></li>
+            <li><a href="/add_doctor">Добавить врача</a></li>
+            <li><a href="/add_appointment">Добавить прием</a></li>
+            <li><a href="/patientlist">Список Пациентов</a></li>
+        </ul>
+    </div>
+</body>
+
+</html>

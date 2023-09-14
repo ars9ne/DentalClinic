@@ -1,15 +1,24 @@
-<form action="/add_patient" method="post">
-    ID: <input type="number" name="id"><br>
-    Имя: <input type="text" name="name"><br>
-    Дата рождения: <input type="date" name="date_of_birth"><br>
-    История болезней: <input type="text" name="Medical_History"><br>
-    Аллергия: <input type="text" name="allergy"><br>
-    Принимаемые лекарства: <input type="text" name="medication_taken"><br>
-    Последний cпециалист: <input type="text" name="last specialist"><br>
-    Симптомы: <input type="text" name="symptoms"><br>
-    Предыдущие процедуры: <input type="text" name="previous_dental_procedures"><br>
-    Вредные привычки: <input type="text" name="bad_habitats"><br>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_patient.css')}}">
+<body>
+    <form action="/add_patient" method="post">
+        <ul>
+            <li>ID: <input type="number" name="id"></li>
+            <li>Имя: <input type="text" name="name"></li>
+            <li>Дата рождения: <input type="date" name="date_of_birth"></li>
+            <li>Номер телефона: <input type="text" name="phone_number"></li>
+            <li>История болезней: <input type="text" name="Medical_History"></li>
+            <li>Аллергия: <input type="text" name="allergy"><li>
+            <li>Принимаемые лекарства: <input type="text" name="medication_taken">><li>
+            <li>Последний cпециалист: <input type="text" name="last specialist"><li>
+            <li>Симптомы: <input type="text" name="symptoms"><li>
+            <li>Предыдущие процедуры: <input type="text" name="previous_dental_procedures"><li>
+            <li>Вредные привычки: <input type="text" name="bad_habitats"><li>
 
-    <!-- Добавьте другие поля, если нужно -->
-    <input type="submit" value="Добавить">
-</form>
+            <!-- Добавьте другие поля, если нужно -->
+            <input type="submit" value="Добавить">
+        </ul>
+
+    </form>
+
+</body>
+

@@ -5,6 +5,11 @@ import mysql.connector
 app = Flask(__name__)
 
 @app.route('/')
+def mainpage():
+    return render_template('mainpage.html')
+
+
+@app.route('/patientlist')
 def index():
     conn = mysql.connector.connect(
         host="localhost",
@@ -18,6 +23,7 @@ def index():
     cursor.close()
     conn.close()
     return render_template('index.html', patients=patients)
+
 
 def get_db_connection():
     return mysql.connector.connect(
@@ -33,6 +39,7 @@ def add_patient():
         Patient_ID = request.form['id']
         name = request.form['name']
         Date_of_Birth = request.form['date_of_birth']
+        Phone_Number = request.form['phone_number']
         Medical_History = request.form['Medical_History']
         Allergies = request.form['allergy']
         Medication = request.form['medication_taken']
@@ -43,7 +50,7 @@ def add_patient():
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO Patients (Patient_ID, Name, Date_of_Birth, Medical_History, Allergies, Medications, Other_specialists, Symptoms_and_Pain, Previous_Dental_Procedures, Bad_Habits) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (Patient_ID, name, Date_of_Birth, Medical_History, Allergies, Medication, Other_specialist, Symptoms_and_Pain, Previous_Dental_Procedures, Bad_Habits))
+        cursor.execute("INSERT INTO Patients (Patient_ID, Name, Date_of_Birth, Phone_Number, Medical_History, Allergies, Medications, Other_specialists, Symptoms_and_Pain, Previous_Dental_Procedures, Bad_Habits) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (Patient_ID, name, Date_of_Birth, Phone_Number, Medical_History, Allergies, Medication, Other_specialist, Symptoms_and_Pain, Previous_Dental_Procedures, Bad_Habits))
         conn.commit()
         cursor.close()
         conn.close()

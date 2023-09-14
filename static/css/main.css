@@ -2,7 +2,10 @@
 .id-column {
     width: 50px;
 }
-
+.container .overlay {
+  inset: 0;
+  position: absolute;
+}
 .name-column {
     width: 150px;
 }
