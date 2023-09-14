@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/online_registration.css')}}">
+<body>
+    <form action="/online-reg" method="post">
+        <ul>
+            <li>Имя: <input type="text" name="name"></li>
+            <li>Номер телефона: <input type="text" name="phone_number"></li>
+            <li>Что Вас беспокоит? : <input type="text" name="Medical_History"><li>
+
+
+            <!-- Добавьте другие поля, если нужно -->
+            <input type="submit" value="Отравить">
+        </ul>
+
+    </form>
+
+</body>

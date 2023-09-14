@@ -1,8 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for
-
+import random
 import mysql.connector
 
 app = Flask(__name__)
+
+
+def generate_unique_patient_id(conn):
+    cursor = conn.cursor()
+
+    while True:
+        # Генерируем рандомный ID в диапазоне, например, от 1 до 1000000.
+        random_id = random.randint(1, 1000000)
+
+        # Проверяем, используется ли этот ID.
+        cursor.execute("SELECT COUNT(*) FROM Patients WHERE Patient_ID = %s", (random_id,))
+        count = cursor.fetchone()[0]
+
+        # Если ID не используется, возвращаем его.
+        if count == 0:
+            return random_id
+
 
 @app.route('/')
 def mainpage():
@@ -35,10 +52,16 @@ def get_db_connection():
 
 @app.route('/add_patient', methods=['GET', 'POST'])
 def add_patient():
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="121940",
+        database="dent"
+    )
     if request.method == 'POST':
-        Patient_ID = request.form['id']
+        Patient_ID = generate_unique_patient_id(conn)
         name = request.form['name']
-        Date_of_Birth = request.form['date_of_birth']
+        Date_of_Birth = request.form.get('date_of_birth')
         Phone_Number = request.form['phone_number']
         Medical_History = request.form['Medical_History']
         Allergies = request.form['allergy']
@@ -61,12 +84,15 @@ def add_patient():
 @app.route('/add_doctor', methods=['GET', 'POST'])
 def add_doctor():
     if request.method == 'POST':
+        conn = get_db_connection()
+        Doctor_ID = generate_unique_patient_id(conn)
         name = request.form['name']
+        specialization = request.form['specialization']
         # Добавьте другие поля, если нужно
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO Doctors (name) VALUES (%s)", (name,))
+        cursor.execute("INSERT INTO Doctors (Doctor_ID, name, Specialization) VALUES (%s,%s,%s)", (Doctor_ID, name, specialization))
         conn.commit()
         cursor.close()
         conn.close()
@@ -88,6 +114,42 @@ def add_appointment():
         conn.close()
         return redirect(url_for('index'))
     return render_template('add_appointment.html')
+
+
+@app.route('/online-reg', methods=['GET', 'POST'])
+def online_registration():
+    if request.method == 'POST':
+        conn = get_db_connection() # Установите соединение здесь
+        Patient_ID = generate_unique_patient_id(conn)
+        name = request.form['name']
+        Phone_Number = request.form['phone_number']
+        Medical_History = request.form['Medical_History']
+
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO Patients (Patient_ID, Name, Phone_Number, Medical_History) VALUES (%s, %s, %s, %s)",
+            (Patient_ID, name, Phone_Number, Medical_History))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return redirect(url_for('index'))
+    return render_template('online_registration.html')
+
+
+@app.route('/doctor_list', methods=['GET', 'POST'])
+def doctor_list():
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="121940",
+        database="dent"
+    )
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM doctors")
+    patients = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('doctor_list.html', patients=patients)
 
 if __name__ == '__main__':
     app.run(debug=True)

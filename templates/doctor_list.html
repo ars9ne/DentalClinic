@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Список пациентов</title>
+    <title>Список Врачей</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         /* Добавляем стили границ для ячеек таблицы */
@@ -21,23 +21,16 @@
     <a href="/add_patient">Добавить пациента</a><br>
     <a href="/add_doctor">Добавить врача</a><br>
     <a href="/add_appointment">Добавить прием</a><br>
-    <a href="/doctor_list">Список Врачей</a><br>
+    <a href="/patientlist">Список пациентов</a><br>
 
-    <h1>Список пациентов</h1>
+    <h1>Врачей</h1>
     <table>
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Имя</th>
-                <th>Дата Рождения</th>
-                <th>Номер Телефона</th>
-                <th>Болезни</th>
-                <th>Аллергия</th>
-                <th>Принимаемые лекарства</th>
-                <th>После специалист</th>
-                <th>Симптомы</th>
-                <th>Предыдущие процедуры</th>
-                <th>Вредные привычки</th>
+                <th>Специализация</th>
+
                 <!-- Добавляем ещё столбцы если расширяем количество столбцов таблицы-->
             </tr>
         </thead>
@@ -47,14 +40,7 @@
                 <td>{{ patient[0] }}</td>
                 <td>{{ patient[1] }}</td>
                 <td>{{ patient[2] }}</td>
-                <td>{{ patient[3] }}</td>
-                <td>{{ patient[4] }}</td>
-                <td>{{ patient[5] }}</td>
-                <td>{{ patient[6] }}</td>
-                <td>{{ patient[7] }}</td>
-                <td>{{ patient[8] }}</td>
-                <td>{{ patient[9] }}</td>
-                <td>{{ patient[10] }}</td>
+
                 <!-- Добавляем другие ячейки таблицы если расширим таблицу -->
             </tr>
             {% endfor %}
