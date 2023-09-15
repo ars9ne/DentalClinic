@@ -1,7 +1,40 @@
-<form action="/add_appointment" method="post">
-    ID пациента: <input type="text" name="patient_id"><br>
-    ID врача: <input type="text" name="doctor_id"><br>
-    Дата: <input type="date" name="date"><br>
-    <input type="submit" value="Добавить">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Appointment</title>
+</head>
+<body>
+    <h2>Add Appointment</h2>
+    <form action="/add_appointment" method="post">
+        <label for="patient_id">Select Patient:</label>
+        <select name="patient_id" id="patient_id">
+            {% for patient in patients %}
+                <option value="{{ patient[0] }}">{{ patient[1] }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
 
-</form>
+        <label for="doctor_id">Select Doctor:</label>
+        <select name="doctor_id" id="doctor_id">
+            {% for doctor in doctors %}
+                <option value="{{ doctor[0] }}">{{ doctor[1] }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label for="date">Date:</label>
+        <input type="date" name="date" id="date" required>
+        <br><br>
+
+        <label for="time">Time:</label>
+        <input type="time" name="time" id="time" required>
+        <br><br>
+
+        <input type="submit" value="Add Appointment">
+    </form>
+    <br>
+    <a href="/">Back to Main Page</a>
+</body>
+</html>

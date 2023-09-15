@@ -99,23 +99,6 @@ def add_doctor():
         return redirect(url_for('index'))
     return render_template('add_doctor.html')
 
-@app.route('/add_appointment', methods=['GET', 'POST'])
-def add_appointment():
-    if request.method == 'POST':
-        patient_id = request.form['patient_id']
-        doctor_id = request.form['doctor_id']
-        date = request.form['date']
-
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO Appointments (patient_id, doctor_id, date) VALUES (%s, %s, %s)", (patient_id, doctor_id, date))
-        conn.commit()
-        cursor.close()
-        conn.close()
-        return redirect(url_for('index'))
-    return render_template('add_appointment.html')
-
-
 @app.route('/online-reg', methods=['GET', 'POST'])
 def online_registration():
     if request.method == 'POST':
@@ -150,6 +133,39 @@ def doctor_list():
     cursor.close()
     conn.close()
     return render_template('doctor_list.html', patients=patients)
+
+
+@app.route('/add_appointment', methods=['GET', 'POST'])
+def add_appointment():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        patient_id = request.form['patient_id']
+        doctor_id = request.form['doctor_id']
+        date = request.form['date']
+        time = request.form['time']
+
+        cursor.execute("INSERT INTO Appointments (Patient_ID, Doctor_ID, Date, Time) VALUES (%s, %s, %s, %s)", (patient_id, doctor_id, date, time))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return redirect(url_for('index'))
+    else:
+        cursor.execute("SELECT * FROM Patients")
+        patients = cursor.fetchall()
+
+        cursor.execute("SELECT * FROM Doctors")
+        doctors = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+
+        return render_template('add_appointment.html', patients=patients, doctors=doctors)
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

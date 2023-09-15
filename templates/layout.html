@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Медицинская клиника</title>
+    <!-- Подключение стилей CSS (если они у вас есть) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Стоматология StomatCenter</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('mainpage') }}">Главная</a></li>
+                <li><a href="{{ url_for('index') }}">Список пациентов</a></li>
+                <li><a href="{{ url_for('doctor_list') }}">Список врачей</a></li>
+                <li><a href="{{ url_for('add_patient') }}">Добавить пациента</a></li>
+                <li><a href="{{ url_for('add_doctor') }}">Добавить врача</a></li>
+                <li><a href="{{ url_for('add_appointment') }}">Запись на прием</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Этот блок будет заменен содержимым других шаблонов -->
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2023 StomatCenter. Все права незащищённые :(</p>
+    </footer>
+</body>
+</html>
