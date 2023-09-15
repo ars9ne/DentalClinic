@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Treatment</title>
+</head>
+<body>
+
+<form action="/add_treatment" method="post">
+    <div>
+        <label for="Description">Description:</label>
+        <textarea name="Description" id="Description" required></textarea>
+    </div>
+    <br>
+
+    <div>
+        <label for="Appointment">Appointment ID:</label>
+        <input type="number" name="Appointment" id="Appointment" required onchange="updatePatientID()">
+    </div>
+    <br>
+
+    <div>
+        <label for="Patient_ID">Patient ID:</label>
+        <input type="number" name="Patient_ID" id="Patient_ID" readonly>
+    </div>
+    <br>
+
+    <div>
+        <label for="Recipe">Recipe:</label>
+        <textarea name="Recipe" id="Recipe" required></textarea>
+    </div>
+    <br>
+
+    <input type="submit" value="Add Treatment">
+</form>
+
+<script>
+    function updatePatientID() {
+        const appointmentID = document.getElementById('Appointment').value;
+
+        // Запросите Patient_ID для выбранного Appointment_ID
+        fetch(`/get_patient_by_appointment?appointment_id=${appointmentID}`)
+            .then(response => response.json())
+            .then(data => {
+                const patientIDInput = document.getElementById('Patient_ID');
+                patientIDInput.value = data.patient_id;
+            });
+    }
+</script>
+
+</body>
+</html>

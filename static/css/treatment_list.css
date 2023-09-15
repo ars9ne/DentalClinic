@@ -1,0 +1,32 @@
+/* Устанавливаем ширину колонок */
+.id-column {
+    width: 50px;
+}
+.container .overlay {
+  inset: 0;
+  position: absolute;
+}
+.name-column {
+    width: 150px;
+}
+
+.dob-column {
+    width: 100px;
+}
+
+.disease-column {
+    width: 200px;
+}
+
+/* Добавляем стили для разделения колонок */
+table {
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+/* Другие стили для ячеек таблицы, если необходимо */

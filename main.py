@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import random
 import mysql.connector
 
@@ -145,8 +145,8 @@ def add_appointment():
         doctor_id = request.form['doctor_id']
         date = request.form['date']
         time = request.form['time']
-
-        cursor.execute("INSERT INTO Appointments (Patient_ID, Doctor_ID, Date, Time) VALUES (%s, %s, %s, %s)", (patient_id, doctor_id, date, time))
+        cabinet = request.form['cabinet']
+        cursor.execute("INSERT INTO Appointments (Patient_ID, Doctor_ID, Date, Time, Cabinet) VALUES (%s, %s, %s, %s, %s)", (patient_id, doctor_id, date, time, cabinet))
         conn.commit()
         cursor.close()
         conn.close()
@@ -158,14 +158,99 @@ def add_appointment():
         cursor.execute("SELECT * FROM Doctors")
         doctors = cursor.fetchall()
 
+        cursor.execute("SELECT * FROM Doctor_Cabinet")
+        cabinets = cursor.fetchall()
+
         cursor.close()
         conn.close()
 
-        return render_template('add_appointment.html', patients=patients, doctors=doctors)
+        return render_template('add_appointment.html', patients=patients, doctors=doctors, cabinets=cabinets)
 
 
+@app.route('/get_doctors_by_cabinet')
+def get_doctors_by_cabinet():
+    cabinet_id = request.args.get('cabinet_id')
+    day = request.args.get('day')
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT Doctors.Doctor_ID, Name FROM Doctor_Cabinet JOIN Doctors ON Doctor_Cabinet.Doctor_ID = Doctors.Doctor_ID WHERE Doctor_Cabinet_ID = %s AND Day_of_Week = %s",
+        (cabinet_id, day))
+
+    doctors = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(doctors)
 
 
+@app.route('/appointments_list')
+def appointments_list():
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="121940",
+        database="dent"
+    )
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Appointments")
+    appointments = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('appointments_list.html', appointments=appointments)
+
+
+@app.route('/add_treatment', methods=['GET', 'POST'])
+def add_treatment():
+    if request.method == 'POST':
+        conn = get_db_connection()
+        Treatment_ID = generate_unique_patient_id(conn)
+        Description = request.form['Description']
+        Appointment_ID = request.form['Appointment']
+        Recipe = request.form['Recipe']
+        Patient_ID = request.form['Patient_ID']
+        # Добавьте другие поля, если нужно
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO treatments (Treatment_ID, Description, Appointment_ID, Recipe, Patient_ID) VALUES (%s,%s,%s,%s,%s)",
+            (Treatment_ID, Description, Appointment_ID, Recipe, Patient_ID))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return redirect(url_for('index'))
+    return render_template('add_treatment.html')
+
+
+@app.route('/get_patient_by_appointment')
+def get_patient_by_appointment():
+    appointment_id = request.args.get('appointment_id')
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT Patient_ID FROM Appointments WHERE Appointment_ID = %s", (appointment_id,))
+    patient_id = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
+    return jsonify(patient_id=patient_id)
+
+
+@app.route('/treatment_list')
+def treatment_list():
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="121940",
+        database="dent"
+    )
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Treatments")
+    treatment = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('treatment_list.html', treatments=treatment)
 
 if __name__ == '__main__':
     app.run(debug=True)

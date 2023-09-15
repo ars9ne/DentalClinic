@@ -6,35 +6,63 @@
     <title>Add Appointment</title>
 </head>
 <body>
-    <h2>Add Appointment</h2>
-    <form action="/add_appointment" method="post">
-        <label for="patient_id">Select Patient:</label>
-        <select name="patient_id" id="patient_id">
-            {% for patient in patients %}
-                <option value="{{ patient[0] }}">{{ patient[1] }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
 
-        <label for="doctor_id">Select Doctor:</label>
-        <select name="doctor_id" id="doctor_id">
-            {% for doctor in doctors %}
-                <option value="{{ doctor[0] }}">{{ doctor[1] }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
+<form action="/add_appointment" method="post">
+    <label for="patient_id">Select Patient:</label>
+    <select name="patient_id" id="patient_id">
+        {% for patient in patients %}
+            <option value="{{ patient[0] }}">{{ patient[1] }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
 
-        <label for="date">Date:</label>
-        <input type="date" name="date" id="date" required>
-        <br><br>
+    <label for="cabinet">Select Cabinet:</label>
+    <select name="cabinet" id="cabinet" onchange="updateDoctors()">
+        {% for cabinet in cabinets %}
+            <option value="{{ cabinet[0] }}" data-day="{{ cabinet[3] }}">{{ cabinet[2] }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
 
-        <label for="time">Time:</label>
-        <input type="time" name="time" id="time" required>
-        <br><br>
+    <label for="doctor_id">Select Doctor:</label>
+    <select name="doctor_id" id="doctor_id">
+        <!-- Заполнение этого списка будет происходить динамически -->
+    </select>
+    <br><br>
 
-        <input type="submit" value="Add Appointment">
-    </form>
-    <br>
-    <a href="/">Back to Main Page</a>
+    <label for="date">Select Date:</label>
+    <input type="date" name="date" id="date">
+    <br><br>
+    <label for="time">Select Time:</label>
+    <input type="time" name="time" id="time">
+    <br><br>
+
+    <input type="submit" value="Add Appointment">
+</form>
+
+<script>
+    function updateDoctors() {
+        const cabinetSelect = document.getElementById('cabinet');
+        const doctorSelect = document.getElementById('doctor_id');
+        const selectedCabinet = cabinetSelect.options[cabinetSelect.selectedIndex];
+        const dayOfWeek = selectedCabinet.getAttribute('data-day');
+
+        // Очистите предыдущий список врачей
+        doctorSelect.innerHTML = '';
+
+        // Запросите список врачей для выбранного кабинета и дня недели
+        fetch(`/get_doctors_by_cabinet?cabinet_id=${selectedCabinet.value}&day=${dayOfWeek}`)
+            .then(response => response.json())
+            .then(doctors => {
+                doctors.forEach(doctor => {
+                    const option = document.createElement('option');
+                    option.value = doctor[0];
+                    option.textContent = doctor[1];
+                    doctorSelect.appendChild(option);
+                });
+            });
+    }
+</script>
+
 </body>
 </html>
