@@ -1,0 +1,30 @@
+
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Add Medication Record</h2>
+    <form action="/add_medication" method="post">
+        <label for="Patient_ID">Patient ID:</label>
+        <input type="number" id="Patient_ID" name="patient_id" required>
+        <br><br>
+        <label for="Treatment_ID">Treatment ID:</label>
+        <input type="number" id="Treatment_ID" name="treatment_id" required>
+        <br><br>
+        <label for="Medication_info">Medication Info:</label>
+        <textarea id="Medication_info" name="medication_info" rows="4" cols="50" required></textarea>
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
+<script>
+    function updateMedicationInfo() {
+        const patientID = document.getElementById('Patient_ID').value;
+        const treatmentID = document.getElementById('Treatment_ID').value;
+
+        fetch(`/get_medication_info?patient_id=${patientID}&treatment_id=${treatmentID}`)
+            .then(response => response.json())
+            .then(data => {
+                const medicationInfoInput = document.getElementById('Medication_info');
+                medicationInfoInput.value = data.medication_info;
+            });
+    }
+</script>
+{% endblock %}

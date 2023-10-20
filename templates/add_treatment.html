@@ -39,7 +39,7 @@
     function updatePatientID() {
         const appointmentID = document.getElementById('Appointment').value;
 
-        // Запросите Patient_ID для выбранного Appointment_ID
+        // Запросить Patient_ID для выбранного Appointment_ID
         fetch(`/get_patient_by_appointment?appointment_id=${appointmentID}`)
             .then(response => response.json())
             .then(data => {

@@ -1,0 +1,23 @@
+
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Medication Records</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Patient ID</th>
+                <th>Treatment ID</th>
+                <th>Medication Info</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for record in records %}
+            <tr>
+                <td>{{ record.Patient_ID }}</td>
+                <td>{{ record.Treatment_ID }}</td>
+                <td>{{ record.Medication_info }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
