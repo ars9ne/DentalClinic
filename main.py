@@ -211,7 +211,6 @@ def add_treatment():
         Appointment_ID = request.form['Appointment']
         Recipe = request.form['Recipe']
         Patient_ID = request.form['Patient_ID']
-        # Добавьте другие поля, если нужно
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -252,5 +251,45 @@ def treatment_list():
     conn.close()
     return render_template('treatment_list.html', treatments=treatment)
 
+@app.route('/add_medication', methods=['GET', 'POST'])
+def add_medication():
+    if request.method == 'POST':
+        patient_id = request.form['patient_id']
+        treatment_id = request.form['treatment_id']
+        medication_info = request.form['medication_info']
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="121940",
+            database="dent"
+        )
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO medication (Patient_ID, Treatment_ID, Medication_info) VALUES (%s, %s, %s)", (patient_id, treatment_id, medication_info))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return redirect('/view_medication')
+    return render_template('add_medication.html')
+
+
+
+@app.route('/view_medication')
+def view_medication():
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="121940",
+        database="dent"
+    )
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM medication")
+    records = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('view_medication.html', records=records)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
+
+
