@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Patient</title>
+    <!-- Add any additional stylesheet links here -->
+</head>
+<body>
+    <h2>Edit Patient Information</h2>
+    <form action="" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="{{ patient['Name'] }}" required>
+
+        <label for="date_of_birth">Date of Birth:</label>
+        <input type="date" id="date_of_birth" name="date_of_birth" value="{{ patient['Date_of_Birth'] }}">
+
+        <label for="phone_number">Phone Number:</label>
+        <input type="text" id="phone_number" name="phone_number" value="{{ patient['Phone_Number'] }}">
+
+        <label for="medical_history">Medical History:</label>
+        <textarea id="medical_history" name="medical_history">{{ patient['Medical_History'] }}</textarea>
+
+        <label for="allergies">Allergies:</label>
+        <textarea id="allergies" name="allergies">{{ patient['Allergies'] }}</textarea>
+
+        <label for="medications">Current Medications:</label>
+        <textarea id="medications" name="medications">{{ patient['Medications'] }}</textarea>
+
+        <label for="other_specialists">Other Specialists Seen:</label>
+        <textarea id="other_specialists" name="other_specialists">{{ patient['Other_Specialists'] }}</textarea>
+
+        <label for="symptoms_and_pain">Symptoms and Pain:</label>
+        <textarea id="symptoms_and_pain" name="symptoms_and_pain">{{ patient['Symptoms_and_Pain'] }}</textarea>
+
+        <label for="previous_dental_procedures">Previous Dental Procedures:</label>
+        <textarea id="previous_dental_procedures" name="previous_dental_procedures">{{ patient['Previous_Dental_Procedures'] }}</textarea>
+
+        <label for="bad_habits">Bad Habits:</label>
+        <textarea id="bad_habits" name="bad_habits">{{ patient['Bad_Habits'] }}</textarea>
+
+        <input type="submit" value="Update Patient Information">
+    </form>
+</body>
+</html>

@@ -4,6 +4,23 @@ import mysql.connector
 
 app = Flask(__name__)
 
+@app.route('/patientlist')
+def patientlist():
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="121940",
+        database="dent"
+    )
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Patients")
+    patients = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('index.html', patients=patients)
+
+
+
 
 def generate_unique_patient_id(conn):
     cursor = conn.cursor()
@@ -41,6 +58,14 @@ def index():
     conn.close()
     return render_template('index.html', patients=patients)
 
+
+db_config = {
+    'user': 'root',
+    'password': '121940',
+    'host': 'localhost',
+    'database': 'dent',
+    'raise_on_warnings': True
+}
 
 def get_db_connection():
     return mysql.connector.connect(
@@ -195,7 +220,12 @@ def appointments_list():
         database="dent"
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Appointments")
+    # Обновленный запрос для получения информации о приемах и именах врачей
+    cursor.execute("""
+        SELECT a.Appointment_ID, d.name, a.Date, a.Time, a.Patient_ID, a.Cabinet
+        FROM Appointments AS a
+        JOIN Doctors AS d ON a.Doctor_ID = d.Doctor_ID
+    """)
     appointments = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -288,6 +318,57 @@ def view_medication():
     conn.close()
     return render_template('view_medication.html', records=records)
 
+
+@app.route('/update_patient/<int:patient_id>', methods=['GET', 'POST'])
+def update_patient(patient_id):
+    # Connect to the database
+    db_connection = mysql.connector.connect(**db_config)
+    db_cursor = db_connection.cursor()
+
+    if request.method == 'POST':
+        # Retrieve form data
+        name = request.form['name']
+        date_of_birth = request.form['date_of_birth']
+        phone_number = request.form['phone_number']
+        medical_history = request.form['medical_history']
+        allergies = request.form['allergies']
+        medications = request.form['medications']
+        other_specialists = request.form['other_specialists']
+        symptoms_and_pain = request.form['symptoms_and_pain']
+        previous_dental_procedures = request.form['previous_dental_procedures']
+        bad_habits = request.form['bad_habits']
+
+        # SQL to update patient data
+        update_sql = """UPDATE patients SET 
+                        Name=%s, Date_of_Birth=%s, Phone_Number=%s, 
+                        Medical_History=%s, Allergies=%s, Medications=%s, 
+                        Other_Specialists=%s, Symptoms_and_Pain=%s, 
+                        Previous_Dental_Procedures=%s, Bad_Habits=%s 
+                        WHERE Patient_ID=%s"""
+        update_values = (name, date_of_birth, phone_number,
+                         medical_history, allergies, medications,
+                         other_specialists, symptoms_and_pain,
+                         previous_dental_procedures, bad_habits, patient_id)
+
+        # Execute the update query
+        db_cursor.execute(update_sql, update_values)
+        db_connection.commit()
+        db_cursor.close()
+        db_connection.close()
+
+        # Redirect to the patient list or display a success message
+        return redirect(url_for('patientlist'))
+
+    else:
+        # For GET request, fetch patient data to populate the form
+        select_sql = "SELECT * FROM patients WHERE Patient_ID = %s"
+        db_cursor.execute(select_sql, (patient_id,))
+        patient_data = db_cursor.fetchone()
+        db_cursor.close()
+        db_connection.close()
+
+        # Render the edit patient form with the patient data
+        return render_template('edit_patient.html', patient=patient_data)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Список пациентов</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         /* Добавляем стили границ для ячеек таблицы */
         table {
@@ -59,9 +59,28 @@
                 <td>{{ patient[9] }}</td>
                 <td>{{ patient[10] }}</td>
                 <!-- Добавляем другие ячейки таблицы если расширим таблицу -->
+
+
+                <td>
+                    <!-- A link or button to edit the patient, passing the patient ID -->
+                    <a href="{{ url_for('update_patient', patient_id=patient[0]) }}">Edit</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
+
     </table>
+
+
+    <!-- Add this button somewhere in your HTML -->
+    <button onclick="toggleNightMode()">Toggle Night Mode</button>
+
+    <!-- Add this script before the closing </body> tag -->
+    <script>
+    function toggleNightMode() {
+      document.body.classList.toggle('night-mode');
+    }
+</script>
+
 </body>
 </html>
