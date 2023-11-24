@@ -26,7 +26,7 @@
     <a href="/patientlist">Список пациентов</a><br>
     <a href="/add_treatment">Добавить рецепт</a><br>
     <a href="/treatment_list">Список рецептов</a><br>
-    <h1>Список пациентов</h1>
+    <h1>Список Приёмов</h1>
     <table>
         <thead>
             <tr>
@@ -48,6 +48,12 @@
                 <td>{{ appointment[4] }}</td>
                 <td>{{ appointment[5] }}</td>
             </tr>
+
+            <td>
+                    <form action="{{ url_for('delete_appointment', appointment_id=appointment[0]) }}" method="post">
+                        <input type="submit" value="Delete" onclick="return confirm('Вы уверены, что хотите этот приём?');">
+                    </form>
+            </td>
             {% endfor %}
         </tbody>
     </table>

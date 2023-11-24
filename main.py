@@ -67,6 +67,32 @@ db_config = {
     'raise_on_warnings': True
 }
 
+@app.route('/delete_patient/<int:patient_id>', methods=['POST'])
+def delete_patient(patient_id):
+    conn = None
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM patients WHERE Patient_ID = %s", (patient_id,))
+        conn.commit()
+        cursor.close()
+    except Exception as e:
+        print(e)
+    finally:
+        if conn is not None:
+            conn.close()
+    # Внутри функции delete_patient
+    return redirect(url_for('patientlist'))  # Используйте правильное имя маршрута
+
+
+db_config = {
+    'user': 'root',
+    'password': '121940',
+    'host': 'localhost',
+    'database': 'dent',
+    'raise_on_warnings': True
+}
+
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
@@ -104,6 +130,31 @@ def add_patient():
         conn.close()
         return redirect(url_for('index'))
     return render_template('add_patient.html')
+
+
+def delete_patient(patient_id):
+    try:
+        # Установление соединения с базой данных
+        connection = get_db_connection()
+
+        if connection.is_connected():
+            # Создание курсора для выполнения SQL-запросов
+            cursor = connection.cursor()
+
+            # SQL запрос на удаление пациента
+            query = "DELETE FROM patients WHERE Patient_ID = %s"
+            cursor.execute(query, (patient_id,))
+
+            # Подтверждение изменений
+            connection.commit()
+
+            print(f"Информация о пациенте с ID {patient_id} удалена успешно.")
+    finally:
+        # Закрытие соединения с базой данных
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            print("Соединение с MySQL закрыто")
 
 
 @app.route('/add_doctor', methods=['GET', 'POST'])
@@ -191,6 +242,22 @@ def add_appointment():
 
         return render_template('add_appointment.html', patients=patients, doctors=doctors, cabinets=cabinets)
 
+@app.route('/delete_appointment/<int:appointment_id>', methods=['POST'])
+def delete_appointment(appointment_id):
+    conn = None
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM appointments WHERE Appointment_ID = %s", (appointment_id,))
+        conn.commit()
+        cursor.close()
+    except Exception as e:
+        print(e)
+    finally:
+        if conn is not None:
+            conn.close()
+    # Внутри функции delete_patient
+    return redirect(url_for('appointments_list'))  # Используйте правильное имя маршрута
 
 @app.route('/get_doctors_by_cabinet')
 def get_doctors_by_cabinet():

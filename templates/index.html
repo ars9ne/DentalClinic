@@ -46,6 +46,8 @@
         </thead>
         <tbody>
             {% for patient in patients %}
+
+
             <tr>
                 <td>{{ patient[0] }}</td>
                 <td>{{ patient[1] }}</td>
@@ -61,9 +63,14 @@
                 <!-- Добавляем другие ячейки таблицы если расширим таблицу -->
 
 
+                        <!-- Link or button to edit the patient -->
+                <td><a href="{{ url_for('update_patient', patient_id=patient[0]) }}">Edit</a></td>
+
+                <!-- Form for deleting the patient -->
                 <td>
-                    <!-- A link or button to edit the patient, passing the patient ID -->
-                    <a href="{{ url_for('update_patient', patient_id=patient[0]) }}">Edit</a>
+                    <form action="{{ url_for('delete_patient', patient_id=patient[0]) }}" method="post">
+                        <input type="submit" value="Delete" onclick="return confirm('Вы уверены, что хотите удалить этого пациента?');">
+                    </form>
                 </td>
             </tr>
             {% endfor %}
